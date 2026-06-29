@@ -8,33 +8,17 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.jokemachine.ui.theme.PikachuTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            val customColorScheme = lightColorScheme(
-                primary = Color(0xFF000000),
-                onPrimary = Color(0xFFFFFFFF),
-                secondary = Color(0xFFE19720),
-                onSecondary = Color(0xFF000000),
-                background = Color(0xFFFAD61D),
-                onBackground = Color(0xFF000000),
-                surface = Color(0xFFFFFFFF),
-                onSurface = Color(0xFF000000),
-                error = Color(0xFFF62D14),
-                onError = Color(0xFFFFFFFF)
-            )
-
-            MaterialTheme(
-                colorScheme = customColorScheme,
-                typography = Typography()
-            ) {
+            PikachuTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
@@ -64,11 +48,11 @@ fun JokeContent(uiState: UiState, onLoadJoke: () -> Unit) {
     ) {
         when (uiState) {
             is UiState.Loading -> {
-                CircularProgressIndicator(color = Color(0xFF000000))
+                CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
                 Text(
                     text = "Loading joke...",
                     modifier = Modifier.padding(top = 16.dp),
-                    color = Color(0xFF000000)
+                    color = MaterialTheme.colorScheme.primary
                 )
             }
             is UiState.Success -> {
@@ -76,7 +60,7 @@ fun JokeContent(uiState: UiState, onLoadJoke: () -> Unit) {
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     colors = CardDefaults.cardColors(
-                        containerColor = Color(0xFFFFFFFF),
+                        containerColor = MaterialTheme.colorScheme.surface,
                     ),
                     elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
                 ) {
@@ -90,14 +74,14 @@ fun JokeContent(uiState: UiState, onLoadJoke: () -> Unit) {
                         Text(
                             text = joke.setup,
                             style = MaterialTheme.typography.titleMedium,
-                            color = Color(0xFF000000),
+                            color = MaterialTheme.colorScheme.onSurface,
                             textAlign = TextAlign.Center
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
                             text = joke.punchline,
                             style = MaterialTheme.typography.bodyLarge,
-                            color = Color(0xFF000000),
+                            color = MaterialTheme.colorScheme.onSurface,
                             textAlign = TextAlign.Center
                         )
                     }
@@ -106,8 +90,8 @@ fun JokeContent(uiState: UiState, onLoadJoke: () -> Unit) {
                 Button(
                     onClick = onLoadJoke,
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFFE19720),
-                        contentColor = Color(0xFF000000)
+                        containerColor = MaterialTheme.colorScheme.secondary,
+                        contentColor = MaterialTheme.colorScheme.onSecondary
                     )
                 ) {
                     Text("New Joke")
@@ -116,15 +100,15 @@ fun JokeContent(uiState: UiState, onLoadJoke: () -> Unit) {
             is UiState.Error -> {
                 Text(
                     text = "Error: ${uiState.message}",
-                    color = Color(0xFFF62D14),
+                    color = MaterialTheme.colorScheme.error,
                     textAlign = TextAlign.Center
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 Button(
                     onClick = onLoadJoke,
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFFE19720),
-                        contentColor = Color(0xFF000000)
+                        containerColor = MaterialTheme.colorScheme.secondary,
+                        contentColor = MaterialTheme.colorScheme.onSecondary
                     )
                 ) {
                     Text("Try Again")
@@ -134,11 +118,11 @@ fun JokeContent(uiState: UiState, onLoadJoke: () -> Unit) {
     }
 }
 
-// Previews
+
 @Preview(showBackground = true)
 @Composable
 fun PreviewJokeLoading() {
-    MaterialTheme {
+    PikachuTheme {
         Surface(color = MaterialTheme.colorScheme.background) {
             JokeContent(uiState = UiState.Loading, onLoadJoke = {})
         }
@@ -148,7 +132,7 @@ fun PreviewJokeLoading() {
 @Preview(showBackground = true)
 @Composable
 fun PreviewJokeSuccess() {
-    MaterialTheme {
+    PikachuTheme {
         Surface(color = MaterialTheme.colorScheme.background) {
             JokeContent(
                 uiState = UiState.Success(
@@ -168,7 +152,7 @@ fun PreviewJokeSuccess() {
 @Preview(showBackground = true)
 @Composable
 fun PreviewJokeError() {
-    MaterialTheme {
+    PikachuTheme {
         Surface(color = MaterialTheme.colorScheme.background) {
             JokeContent(
                 uiState = UiState.Error("Network error. Please try again."),
